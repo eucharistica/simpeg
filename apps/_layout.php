@@ -39,5 +39,4 @@ $view = $view ?? null;
   <?php include __DIR__ . '/partials/drawers/layout_drawers.php'; ?>
   <?php include __DIR__ . '/partials/scripts.php'; ?>
 </body>
-
 </html>

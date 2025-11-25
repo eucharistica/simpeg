@@ -8,6 +8,8 @@ if (strpos($uri, '/apps/office') === 0) {
     $activeRoot = 'office';
 } elseif (strpos($uri, '/apps/simrs') === 0) {
     $activeRoot = 'simrs';
+} elseif (strpos($uri, '/apps/admin') === 0) {
+    $activeRoot = 'admin';
 }
 
 // Helpers untuk class active/here
@@ -23,14 +25,9 @@ function menuHere(string $pathPrefix): string
 ?>
 
 
-<div id="kt_aside" class="aside aside-extended" 
-    data-kt-drawer="true" 
-    data-kt-drawer-name="aside"
-    data-kt-drawer-activate="{default: true, lg: false}" 
-    data-kt-drawer-overlay="true" 
-    data-kt-drawer-width="auto"
-    data-kt-drawer-direction="start" 
-    data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+<div id="kt_aside" class="aside aside-extended" data-kt-drawer="true" data-kt-drawer-name="aside"
+    data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
+    data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
     <!--begin::Primary-->
     <div class="aside-primary d-flex flex-column align-items-lg-center flex-row-auto">
         <div class="aside-logo d-none d-lg-flex flex-column align-items-center flex-column-auto py-10"
@@ -47,15 +44,63 @@ function menuHere(string $pathPrefix): string
                 data-kt-scroll-wrappers="#kt_aside_nav" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer"
                 data-kt-scroll-offset="0px">
 
-                <?php 
-                include __DIR__ . '/primary-menu/menu.php'; 
-                ?>                
+                <!-- Primary Menu -->
+                <!--begin::Nav-->
+                <ul class="nav flex-column w-100" id="kt_aside_nav_tabs">
+                    <!--begin::Nav item-->
+                    <li class="nav-item mb-2" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="right"
+                        data-bs-dismiss="click" title="Dashboard">
+                        <!--begin::Nav link-->
+                        <a class="nav-link btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light <?= rootActive('dashboards', $activeRoot) ?>"
+                            href="/apps/dashboards">
+                            <i class="ki-duotone ki-briefcase fs-2x">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </a>
+                        <!--end::Nav link-->
+                    </li>
+                    <!--end::Nav item-->
+                    <!--begin::Nav item-->
+                    <?php if (can('simrs:view')): ?>
+                        <li class="nav-item mb-2" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="right"
+                            data-bs-dismiss="click" title="SIMRS">
+                            <!--begin::Nav link-->
+                            <a class="nav-link btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light <?= rootActive('simrs', $activeRoot) ?>"
+                                href="/apps/simrs">
+                                <i class="ki-duotone ki-abstract fs-2x">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                            </a>
+                            <!--end::Nav link-->
+                        </li>
+                    <?php endif; ?>
+                    <!--end::Nav item-->
+                    <!--begin::Nav item-->
+                    <?php if (can('admin:view')): ?>
+                    <li class="nav-item mb-2" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="right"
+                        data-bs-dismiss="click" title="Admin">
+                        <!--begin::Nav link-->
+                        <a class="nav-link btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light <?= rootActive('admin', $activeRoot) ?>"
+                            href="/apps/admin">
+                            <i class="ki-duotone ki-key fs-2x">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </a>
+                        <!--end::Nav link-->
+                    </li>
+                    <?php endif; ?>
+                    <!--end::Nav item-->
+                </ul>
+                <!--end::Tabs-->
             </div>
         </div>
         <!--end::Nav-->
-        <div class="aside-footer d-flex flex-column align-items-center flex-column-auto" id="kt_aside_footer">            
-            <?php 
-            include __DIR__ . '/footer-primary/user.php'; 
+        <div class="aside-footer d-flex flex-column align-items-center flex-column-auto" id="kt_aside_footer">
+            <?php
+            include __DIR__ . '/footer-primary/user.php';
             ?>
         </div>
     </div>
@@ -70,13 +115,15 @@ function menuHere(string $pathPrefix): string
                     data-kt-scroll-dependencies="#kt_aside_secondary_footer" data-kt-scroll-offset="0px">
 
                     <div class="tab-content">
-                    <?php 
-                    if ($activeRoot==='dashboards'):
-                        include __DIR__ . '/secondary-menu/dashboard.php'; 
-                    elseif ($activeRoot==='simrs'):
-                        include __DIR__ . '/secondary-menu/simrs.php';
-                    endif;
-                    ?>
+                        <?php
+                        if ($activeRoot === 'dashboards'):
+                            include __DIR__ . '/secondary-menu/dashboard.php';
+                        elseif ($activeRoot === 'simrs'):
+                            include __DIR__ . '/secondary-menu/simrs.php';
+                        elseif ($activeRoot === 'admin'):
+                            include __DIR__ . '/secondary-menu/admin.php';
+                        endif;
+                        ?>
                     </div>
 
                 </div>
