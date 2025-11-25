@@ -1,0 +1,44 @@
+# =========================================
+# RSUD Matraman — Hardening .htaccess
+# =========================================
+
+# 1) Matikan listing direktori
+Options -Indexes
+
+# 2) Charset & CORS dasar (same-origin)
+AddDefaultCharset utf-8
+Header always unset Access-Control-Allow-Origin
+Header always unset Access-Control-Allow-Credentials
+
+# 3) Security headers
+#   Catatan: HSTS aktif hanya jika sudah 100% HTTPS.
+#   Saat sudah yakin, buka baris HSTS di bawah.
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+# 4) Content-Security-Policy (pragmatis untuk Metronic)
+#    Tambahkan domain lain jika Anda load dari CDN tambahan.
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self'; frame-ancestors 'self';"
+
+# 5) Cache-control
+<FilesMatch "\.(ico|jpg|jpeg|png|gif|svg|webp|avif|css|js|woff|woff2|ttf|eot)$">
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Jangan cache halaman auth
+<FilesMatch "(sign-in\.html|reset-password\.html)$">
+  Header set Cache-Control "no-store"
+</FilesMatch>
+
+# 6) Blokir akses langsung ke file sensitif
+#   - Folder library API
+RewriteEngine On
+RewriteRule ^api/_lib/ - [F,L]
+
+#   - File config/log/skrip
+<FilesMatch "\.(env|ini|log|sql|sh|bat|cmd|ps1)$">
+  Require all denied
+</FilesMatch>
