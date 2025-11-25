@@ -1,3 +1,5 @@
 /_private
 api/_lib/db_sik.php
 api/_lib/db.php
+/assets/media
+/src
